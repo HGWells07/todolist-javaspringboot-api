@@ -1,7 +1,6 @@
 package com.seed.todolistapi.Controllers;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.validation.Valid;
