@@ -17,27 +17,27 @@ public class TaskService {
     this.taskAccessService = taskAccessService;
   }
 
-  public List<Task> getTaskList(Boolean undoneOnly, String query){
+  public List<Task> getTaskList(Boolean undoneOnly, String query) {
     return taskAccessService.getTaskList(undoneOnly, query);
   }
 
-  public Task getTask(UUID id){
+  public Task getTask(UUID id) {
     return taskAccessService.getTask(id);
   }
 
-  public int checkTask(UUID id){
+  public int checkTask(UUID id) {
     return taskAccessService.checkTask(id);
   }
 
-  public int createTask(Task task){
+  public int createTask(Task task) {
     return taskAccessService.createTask(task);
   }
 
-  public int editTask(UUID id, Task task){
+  public int editTask(UUID id, Task task) {
     return taskAccessService.editTask(id, task);
   }
 
-  public int deleteTask(UUID id){
+  public int deleteTask(UUID id) {
     return taskAccessService.deleteTask(id);
   }
 }

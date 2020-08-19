@@ -31,13 +31,13 @@ public class TaskController {
   }
 
   @GetMapping
-  public List<Task> getTaskList(
-    @RequestParam(required = false) String search, 
-    @RequestParam(required = false, defaultValue = "1") Integer undoneOnly
-  ) {
-    if(search==null || search.equals("")) search="";
-    if(undoneOnly==null || undoneOnly==1) undoneOnly=1;
-    return taskService.getTaskList(undoneOnly!=0, search);
+  public List<Task> getTaskList(@RequestParam(required = false) String search,
+      @RequestParam(required = false, defaultValue = "1") Integer undoneOnly) {
+    if (search == null || search.equals(""))
+      search = "";
+    if (undoneOnly == null || undoneOnly == 1)
+      undoneOnly = 1;
+    return taskService.getTaskList(undoneOnly != 0, search);
   }
 
   @GetMapping(path = "/{id}")
@@ -46,30 +46,22 @@ public class TaskController {
   }
 
   @PostMapping
-  public int createTask(@RequestBody @Valid Task task
-  ){
+  public int createTask(@RequestBody @Valid Task task) {
     return taskService.createTask(task);
   }
 
   @PutMapping(path = "/check/{id}")
-  public int checkTask(
-    @PathVariable("id") UUID id
-  ){
+  public int checkTask(@PathVariable("id") UUID id, @RequestBody Task task) {
     return taskService.checkTask(id);
   }
 
   @PutMapping(path = "{id}")
-  public int editTask(
-    @PathVariable("id") UUID id,
-    @RequestBody Task task
-  ){
+  public int editTask(@PathVariable("id") UUID id, @RequestBody Task task) {
     return taskService.editTask(id, task);
   }
 
   @DeleteMapping(path = "{id}")
-  public int deleteTask(
-    @PathVariable("id") UUID id
-  ){
+  public int deleteTask(@PathVariable("id") UUID id) {
     return taskService.deleteTask(id);
   }
 

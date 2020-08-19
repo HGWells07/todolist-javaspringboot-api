@@ -18,73 +18,81 @@ public class TaskAccessService {
   @Autowired
   private JdbcTemplate jdbc;
 
-  public List<Task> getTaskList(boolean undoneOnly, String  query){
+  public List<Task> getTaskList(boolean undoneOnly, String query) {
     String temp = "All";
-    if(undoneOnly) temp="Undone";
+    if (undoneOnly)
+      temp = "Undone";
     String sql;
-    if(query.equals("") || query.isBlank() || query==null){
-      sql = "CALL Get"+temp+"TasksNames();";
+    if (query.equals("") || query.isBlank() || query == null) {
+      sql = "CALL Get" + temp + "TasksNames();";
     } else {
-      sql = "CALL Search"+temp+"Tasks('"+query+"');";
+      sql = "CALL Search" + temp + "Tasks('" + query + "');";
     }
     return jdbc.query(sql, mapTaskList());
   }
 
-  public Task getTask(UUID id){
-    if(idExists(id)){
-      String sql = "CALL GetTask('"+id.toString()+"');";
+  public Task getTask(UUID id) {
+    if (idExists(id)) {
+      String sql = "CALL GetTask('" + id.toString() + "');";
       return jdbc.query(sql, mapTask()).get(0);
-    } return new Task("Error: La tarea no existe");
+    }
+    return new Task("Error: La tarea no existe");
   }
 
-  public int checkTask(UUID id){
-    if(idExists(id)){
-      String sql = "CALL ChangeDoneTask('"+id.toString()+"');";
+  public int checkTask(UUID id) {
+    if (idExists(id)) {
+      System.out.println("Check task");
+      String sql = "CALL ChangeDoneTask('" + id.toString() + "');";
       return jdbc.update(sql);
-    } return 0;
+    }
+    return 0;
   }
 
-  public int createTask(Task task){
-    String date="NULL";
-    String nameAux="";
-    String detailsAux="";
+  public int createTask(Task task) {
+    String date = "NULL";
+    String nameAux = "";
+    String detailsAux = "";
 
-    if(task.getDue_date()!=null){
+    if (task.getDue_date() != null) {
       Date temp_date = Date.valueOf(task.getDue_date());
-      date = "'"+temp_date.toString()+"'";
+      date = "'" + temp_date.toString() + "'";
     }
 
-    if(task.getDetails()!=null){
-      detailsAux=task.getDetails();
+    if (task.getDetails() != null) {
+      detailsAux = task.getDetails();
     }
 
-    if(task.getName()!=null){
-      nameAux=task.getName();
+    if (task.getName() != null) {
+      nameAux = task.getName();
     }
 
-    String sql = "CALL CreateTask('"+nameAux+"', '"+detailsAux+"', "+date+");";
+    String sql = "CALL CreateTask('" + nameAux + "', '" + detailsAux + "', " + date + ");";
     return jdbc.update(sql);
   }
 
-  public int editTask(UUID id, Task task){
-    if(idExists(id)){
+  public int editTask(UUID id, Task task) {
+    if (idExists(id)) {
       Date temp_date = Date.valueOf(task.getDue_date());
-      String sql = "CALL EditTask('"+id.toString()+"', '"+task.getName()+"', '"+task.getDetails()+"', '"+temp_date.toString()+"');";
+      String sql = "CALL EditTask('" + id.toString() + "', '" + task.getName() + "', '" + task.getDetails() + "', '"
+          + temp_date.toString() + "');";
       return jdbc.update(sql);
-    } return 0;
+    }
+    return 0;
   }
 
-  public int deleteTask(UUID id){
-    if(idExists(id)){
-      String sql = "CALL DeleteTask('"+id.toString()+"');";
+  public int deleteTask(UUID id) {
+    if (idExists(id)) {
+      String sql = "CALL DeleteTask('" + id.toString() + "');";
       return jdbc.update(sql);
-    } return 0;
+    }
+    return 0;
   }
 
-  private boolean idExists(UUID id){
-    try{
-      jdbc.execute("SELECT TOP 1 Tasks.id FROM Tasks WHERE Tasks.id = '"+id.toString()+"';");
-    } catch(DataAccessException e){
+  private boolean idExists(UUID id) {
+    System.out.println(id.toString());
+    try {
+      jdbc.execute("SELECT Tasks.id FROM Tasks WHERE Tasks.id = '" + id.toString() + "' LIMIT 1;");
+    } catch (DataAccessException e) {
       return false;
     }
     return true;
@@ -96,13 +104,9 @@ public class TaskAccessService {
       UUID id = UUID.fromString(studentIdStr);
 
       String task_name = resultSet.getString("TaskName");
-      boolean done = resultSet.getInt("Done")==1;
+      boolean done = resultSet.getInt("Done") == 1;
 
-      return new Task(
-              id,
-              task_name,
-              done
-      );
+      return new Task(id, task_name, done);
     };
   }
 
@@ -114,15 +118,9 @@ public class TaskAccessService {
       String task_name = resultSet.getString("TaskName");
       String details = resultSet.getString("Details");
       LocalDate due_date = resultSet.getDate("DueDate").toLocalDate();
-      boolean done = resultSet.getInt("Done")==1;
+      boolean done = resultSet.getInt("Done") == 1;
 
-      return new Task(
-              id,
-              task_name,
-              details,
-              due_date,
-              done
-      );
+      return new Task(id, task_name, details, due_date, done);
     };
   }
 

@@ -81,7 +81,10 @@ CREATE PROCEDURE CreateTask(
     IN p_due_date DATE
 )
 BEGIN
+	declare v_id VARCHAR(36);
 	INSERT INTO Tasks(Id, TaskName, Details, Done, DueDate) values (uuid(), p_task_name, p_details, 0, p_due_date);
+	SET v_id = last_insert_id();
+    CALL GetTask(v_id);
 END //
 
 DELIMITER ;
