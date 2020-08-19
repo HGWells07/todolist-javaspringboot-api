@@ -1,0 +1,6 @@
+app:
+  datasource:
+    jdbc-url: jdbc:mysql://localhost:3306/todolistexample?serverTimezone=UTC
+    username: root
+    password: n0m3l0
+    pool-size: 30
